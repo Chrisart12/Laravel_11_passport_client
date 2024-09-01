@@ -9,6 +9,8 @@ class OauthToken extends Model
 {
     use HasFactory;
 
+    
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -16,7 +18,7 @@ class OauthToken extends Model
      */
     protected $fillable = [
         'user_id', 
-        'access_token',
+        'access_token', 
         'expires_in', 
         'refresh_token'
     ];

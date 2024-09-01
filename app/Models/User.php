@@ -48,6 +48,7 @@ class User extends Authenticatable
 
     public function token()
     {
+        // dd("eeeeeeee");
         return $this->hasOne(OauthToken::class);
     }
 }

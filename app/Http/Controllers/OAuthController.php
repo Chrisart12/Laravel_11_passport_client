@@ -10,21 +10,23 @@ class OAuthController extends Controller
 {
     public function redirect()
     {
+        
         $queries = http_build_query([
             'client_id' => '8',
             'redirect_uri' => 'http://127.0.0.1:8001/oauth/callback',
             'response_type' => 'code',
-            'scope' => 'view-posts',
+            // 'scope' => 'view-posts',
             // 'scope' => 'view-posts view-user'
         ]);
     
+        // Faire attention avec localhost et 127.0.0.1 ne pas mettre les deux application sur localhost
         return redirect('http://localhost:8000/oauth/authorize?'. $queries);
     }
 
 
     public function callback(Request $request)
     {
-// dd($request->code);
+       
         $response = Http::post('http://127.0.0.1:8000/oauth/token', [
             'grant_type' => 'authorization_code',
             'client_id' => '8',
@@ -35,8 +37,13 @@ class OAuthController extends Controller
         
         $response = $response->json();
 
-        // dd($response);
-        $request->user()->token()->delete();
+        // dd(auth()->user());
+        // dd($request);
+        // dd($request->user());
+        if ($request->user()) {
+            $request->user()->token()->delete();
+        }
+        
 
         // dd($response);
         auth()->user()->token()->create([
@@ -45,7 +52,7 @@ class OAuthController extends Controller
             'refresh_token' => $response['refresh_token']
         ]);
 
-        return redirect('/home');
+        return redirect('/dashboard');
     }
 
     public function refresh(Request $request)
@@ -68,6 +75,6 @@ class OAuthController extends Controller
             'refresh_token' => $response['refresh_token']
         ]);
 
-        return redirect('/home');
+        return redirect('/dashboard');
     }
 }
